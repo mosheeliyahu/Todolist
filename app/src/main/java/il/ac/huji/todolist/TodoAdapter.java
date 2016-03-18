@@ -14,9 +14,8 @@ import java.util.ArrayList;
  * Created by moshe on 12/03/2016.
  */
 
-
-public class TodoAdapter extends ArrayAdapter<String> {
-        public TodoAdapter(Context context,int layout, ArrayList<String> todoItems) {
+public class TodoAdapter extends ArrayAdapter<TodoObject> {
+        public TodoAdapter(Context context,int layout, ArrayList<TodoObject> todoItems) {
             super(context, layout, todoItems);
         }
 
@@ -24,14 +23,18 @@ public class TodoAdapter extends ArrayAdapter<String> {
         public View getView(int position, View convertView, ViewGroup parent) {
             LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View view = inflater.inflate(R.layout.list_layout, null);
-            TextView rowItem = (TextView)view.findViewById(R.id.row);
-            if(position%2==0){
-                rowItem.setTextColor(ContextCompat.getColor(getContext(), R.color.colorListPink));
+            TextView rowTitle = (TextView)view.findViewById(R.id.row_title);
+            TextView rowDate = (TextView)view.findViewById(R.id.row_date);
+            if(getItem(position).hasPassed()){
+                rowTitle.setTextColor(ContextCompat.getColor(getContext(), R.color.colorListRed));
+                rowDate.setTextColor(ContextCompat.getColor(getContext(), R.color.colorListRed));
             }
             else{
-                rowItem.setTextColor(ContextCompat.getColor(getContext(), R.color.colorListGreen));
+                rowTitle.setTextColor(ContextCompat.getColor(getContext(), R.color.colorListBlack));
+                rowDate.setTextColor(ContextCompat.getColor(getContext(), R.color.colorListBlack));
             }
-            rowItem.setText(getItem(position));
+            rowTitle.setText(getItem(position).getTitle());
+            rowDate.setText(getItem(position).getDate());
             return view;
         }
 }

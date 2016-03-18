@@ -2,4 +2,10 @@
     <string name="app_name">Todolist</string>
     <string name="menuItemAdd">Add</string>
     <string name="contaxtMenuDelete">Delete</string>
+    <string name="AddMenuTitle">Add New Item</string>
+    <string name="AddMenuOK">OK</string>
+    <string name="AddMenuCancel">Cancel</string>
+    <string name="telephone">tel: </string>
+    <string name="callMenu">Call</string>
+    <string name="callTrigger">call</string>
 </resources>

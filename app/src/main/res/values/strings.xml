@@ -8,4 +8,6 @@
     <string name="telephone">tel: </string>
     <string name="callMenu">Call</string>
     <string name="callTrigger">call</string>
+    <string name="db_name">todo_db</string>
+    <string name="db_table_name">todo</string>
 </resources>

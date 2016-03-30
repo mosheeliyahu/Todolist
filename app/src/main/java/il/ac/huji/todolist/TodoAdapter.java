@@ -10,10 +10,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-/**
- * Created by moshe on 12/03/2016.
- */
-
+//Not in use -V3
 public class TodoAdapter extends ArrayAdapter<TodoObject> {
         public TodoAdapter(Context context,int layout, ArrayList<TodoObject> todoItems) {
             super(context, layout, todoItems);

@@ -34,9 +34,10 @@ public class TodoListManagerActivity extends AppCompatActivity {
 
         ListView list = (ListView)findViewById(R.id.lstTodoItems);
         db = DBHelper.getInstance(getApplicationContext());
-        cursorTodoAdapter = new TodoCursorAdapter(getApplicationContext(),db.getData(),0);
+        cursorTodoAdapter = new TodoCursorAdapter(getApplicationContext(),null ,0);
         list.setAdapter(cursorTodoAdapter);
         registerForContextMenu(list);
+        updateDB();
     }
 
     @Override
@@ -59,12 +60,9 @@ public class TodoListManagerActivity extends AppCompatActivity {
                     EditText itemAdd = (EditText) dialogLayout.findViewById(R.id.edtNewItem);
                     if(!itemAdd.getText().toString().isEmpty()) {
                         DatePicker date = (DatePicker) dialogLayout.findViewById(R.id.datePicker);
-                        db.insertToDo(itemAdd.getText().toString(), date.getDayOfMonth(),date.getMonth(),date.getYear());
-                        cursorTodoAdapter.changeCursor(db.getData());
-                        cursorTodoAdapter.notifyDataSetChanged();
-                        itemAdd.setText("");
+                        addToDB(itemAdd.getText().toString(), date.getDayOfMonth(), date.getMonth(), date.getYear());
+                        //itemAdd.setText("");
                     }
-                    db.close();
                 }
             });
             builder.setNegativeButton(R.string.AddMenuCancel, new DialogInterface.OnClickListener() {
@@ -102,9 +100,7 @@ public class TodoListManagerActivity extends AppCompatActivity {
         switch (choice){
             case deleteMenuID:
                 int id = cursor.getInt(cursor.getColumnIndex(DBHelper.COLUMN_ID));
-                db.delete(id);
-                cursorTodoAdapter.changeCursor(db.getData());
-                cursorTodoAdapter.notifyDataSetChanged();
+                deleteFromDB(id);
                 break;
             case callMenuID:
                 String title = cursor.getString(cursor.getColumnIndex(DBHelper.COLUMN_NAME));
@@ -124,5 +120,47 @@ public class TodoListManagerActivity extends AppCompatActivity {
     protected void onDestroy() {
         db.close();
         super.onDestroy();
+    }
+
+    private void updateDB(){
+        Thread t = new Thread(
+                new Runnable() {
+                    public void run() {
+                        final Cursor c = db.getData();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                cursorTodoAdapter.changeCursor(c);
+                                cursorTodoAdapter.notifyDataSetChanged();
+                            }
+                        });
+                    }
+                }
+        );
+        t.start();
+    }
+
+    private void addToDB(final String title,final int day,final int month,final int year){
+        Thread t = new Thread(
+                new Runnable() {
+                    public void run() {
+                        db.insertToDo(title,day,month,year);
+                        updateDB();
+                    }
+                }
+        );
+        t.start();
+    }
+    
+    private void deleteFromDB(final int id) {
+        Thread t = new Thread(
+                new Runnable() {
+                    public void run() {
+                        db.delete(id);
+                        updateDB();
+                    }
+                }
+        );
+        t.start();
     }
 }

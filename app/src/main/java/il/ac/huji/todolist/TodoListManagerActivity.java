@@ -151,7 +151,7 @@ public class TodoListManagerActivity extends AppCompatActivity {
         );
         t.start();
     }
-    
+
     private void deleteFromDB(final int id) {
         Thread t = new Thread(
                 new Runnable() {
